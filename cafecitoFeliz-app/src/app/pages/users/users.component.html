@@ -1,0 +1,294 @@
+<section class="w-full">
+  <!-- Titulo -->
+  <div class="flex items-start justify-between gap-4">
+    <div>
+      <h2 class="text-xl sm:text-2xl font-black text-[#4B3621]">Usuarios</h2>
+      <p class="text-sm text-[#6E5C4B]">
+        Administra cajeros y administradores del sistema.
+      </p>
+    </div>
+  </div>
+
+  <!-- Card filtros y Crear -->
+  <div class="mt-5 grid grid-cols-1 xl:grid-cols-12 gap-5">
+    <!-- Filtros -->
+    <div class="xl:col-span-7 rounded-2xl border border-[#4B3621]/15 bg-white/70 p-5">
+      <h3 class="text-base font-extrabold text-[#4B3621]">Filtros</h3>
+
+      <div class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-3 items-end">
+        <!-- Buscar -->
+        <div class="md:col-span-1">
+          <label class="block text-xs font-bold text-[#6E5C4B] mb-1">Buscar</label>
+          <input
+            type="text"
+            class="h-12 w-full rounded-xl border border-[#8B6F47]/40 bg-white/80 px-4 text-sm text-[#4B3621] outline-none focus:border-[#4B3621]"
+            placeholder="Nombre o correo"
+            [value]="q"
+            (input)="q = $any($event.target).value"
+          />
+        </div>
+
+        <!-- Rol -->
+        <div>
+          <label class="block text-xs font-bold text-[#6E5C4B] mb-1">Rol</label>
+          <select
+            class="h-12 w-full rounded-xl border border-[#8B6F47]/40 bg-white/80 px-4 text-sm text-[#4B3621] outline-none focus:border-[#4B3621]"
+            [value]="roleFilter"
+            (change)="roleFilter = $any($event.target).value"
+          >
+            <option value="all">Todos</option>
+            <option value="admin">Admin</option>
+            <option value="cashier">Cajero</option>
+          </select>
+        </div>
+
+        <!-- Activo -->
+        <div>
+          <label class="block text-xs font-bold text-[#6E5C4B] mb-1">Estado</label>
+          <select
+            class="h-12 w-full rounded-xl border border-[#8B6F47]/40 bg-white/80 px-4 text-sm text-[#4B3621] outline-none focus:border-[#4B3621]"
+            [value]="activeFilter"
+            (change)="activeFilter = $any($event.target).value"
+          >
+            <option value="all">Todos</option>
+            <option value="true">Activos</option>
+            <option value="false">Inactivos</option>
+          </select>
+        </div>
+
+        <!-- Acciones -->
+        <div class="md:col-span-3 flex flex-col sm:flex-row gap-3">
+          <button
+            type="button"
+            (click)="applyFilters()"
+            class="h-12 rounded-xl bg-[#4B3621] px-6 text-sm font-extrabold text-[#F5F5DC] hover:opacity-95 active:scale-[0.99]"
+          >
+            Aplicar
+          </button>
+
+          <button
+            type="button"
+            (click)="clearFilters()"
+            class="h-12 rounded-xl border border-[#4B3621]/25 bg-white px-6 text-sm font-bold text-[#4B3621] hover:bg-[#F5F5DC] active:scale-[0.99]"
+          >
+            Limpiar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Crear usuario -->
+    <div class="xl:col-span-5 rounded-2xl border border-[#4B3621]/15 bg-white/70 p-5">
+      <h3 class="text-base font-extrabold text-[#4B3621]">Crear usuario</h3>
+      <p class="mt-1 text-xs text-[#6E5C4B]">
+        Crea cajeros o admins. La contraseña mínima es 6 caracteres.
+      </p>
+
+      <div class="mt-4 space-y-3">
+        <div>
+          <label class="block text-xs font-bold text-[#6E5C4B] mb-1">Nombre</label>
+          <input
+            type="text"
+            class="h-12 w-full rounded-xl border border-[#8B6F47]/40 bg-white/80 px-4 text-sm text-[#4B3621] outline-none focus:border-[#4B3621]"
+            placeholder="Ej. Juan Pérez"
+            [value]="createName"
+            (input)="createName = $any($event.target).value"
+          />
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-[#6E5C4B] mb-1">Correo</label>
+          <input
+            type="email"
+            class="h-12 w-full rounded-xl border border-[#8B6F47]/40 bg-white/80 px-4 text-sm text-[#4B3621] outline-none focus:border-[#4B3621]"
+            placeholder="cajero@cafecitofeliz.com"
+            [value]="createEmail"
+            (input)="createEmail = $any($event.target).value"
+          />
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-[#6E5C4B] mb-1">Contraseña</label>
+          <input
+            type="password"
+            class="h-12 w-full rounded-xl border border-[#8B6F47]/40 bg-white/80 px-4 text-sm text-[#4B3621] outline-none focus:border-[#4B3621]"
+            placeholder="••••••••"
+            [value]="createPassword"
+            (input)="createPassword = $any($event.target).value"
+          />
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-[#6E5C4B] mb-1">Rol</label>
+          <select
+            class="h-12 w-full rounded-xl border border-[#8B6F47]/40 bg-white/80 px-4 text-sm text-[#4B3621] outline-none focus:border-[#4B3621]"
+            [value]="createRole"
+            (change)="createRole = $any($event.target).value"
+          >
+            <option value="cashier">Cajero</option>
+            <option value="admin">Admin</option>
+          </select>
+        </div>
+
+        <button
+          type="button"
+          (click)="createUser()"
+          [disabled]="creating"
+          class="h-12 w-full rounded-2xl bg-[#FFBF00] text-[#4B3621] text-sm font-black hover:brightness-95 hover:shadow-md active:scale-[0.99] disabled:opacity-60"
+        >
+          @if (creating) { Creando... } @else { Crear usuario }
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Card de usuarios -->
+  <div class="mt-5 rounded-2xl border border-[#4B3621]/15 bg-white/70 p-5">
+    <div class="flex items-center justify-between gap-3">
+      <h3 class="text-base sm:text-lg font-extrabold text-[#4B3621]">Lista</h3>
+      <p class="text-xs sm:text-sm text-[#6E5C4B]">
+        Página {{ page }} de {{ totalPages }} · Total: {{ total }}
+      </p>
+    </div>
+
+    @if (loading) {
+      <p class="mt-4 text-sm text-[#6E5C4B]">Cargando usuarios...</p>
+    } @else if (errorMsg) {
+      <p class="mt-4 text-sm text-red-700 bg-red-50 border border-red-500/20 rounded-xl p-3">
+        {{ errorMsg }}
+      </p>
+    } @else {
+      @if (users.length === 0) {
+        <p class="mt-4 text-sm text-[#6E5C4B]">No hay usuarios con esos filtros.</p>
+      } @else {
+        <div class="mt-4 overflow-x-auto">
+          <table class="min-w-full text-left text-sm">
+            <thead>
+              <tr class="text-xs text-[#6E5C4B]">
+                <th class="py-3 pr-4">Nombre</th>
+                <th class="py-3 pr-4">Correo</th>
+                <th class="py-3 pr-4">Rol</th>
+                <th class="py-3 pr-4">Estado</th>
+                <th class="py-3 pr-0 text-right">Acciones</th>
+              </tr>
+            </thead>
+
+            <tbody class="divide-y divide-[#4B3621]/10">
+              @for (u of users; track u.id) {
+                <tr class="align-middle">
+                  <td class="py-3 pr-4 font-extrabold text-[#4B3621]">
+                    {{ u.name }}
+                  </td>
+
+                  <td class="py-3 pr-4 text-[#4B3621]">
+                    {{ u.email }}
+                  </td>
+
+                  <td class="py-3 pr-4 text-[#4B3621]">
+                    {{ roleLabel(u.role) }}
+                  </td>
+
+                  <td class="py-3 pr-4">
+                    @if (u.active) {
+                      <span class="inline-flex rounded-full bg-emerald-100 px-3 py-1 text-xs font-extrabold text-emerald-700">
+                        Activo
+                      </span>
+                    } @else {
+                      <span class="inline-flex rounded-full bg-gray-200 px-3 py-1 text-xs font-extrabold text-gray-700">
+                        Inactivo
+                      </span>
+                    }
+                  </td>
+
+                  <td class="py-3 pr-0">
+                    <div class="flex justify-end gap-2">
+                      <button
+                        type="button"
+                        (click)="toggleActive(u)"
+                        class="h-11 rounded-xl border border-[#4B3621]/25 bg-white px-4 text-xs font-bold text-[#4B3621] hover:bg-[#F5F5DC] active:scale-[0.99]"
+                      >
+                        @if (u.active) { Desactivar } @else { Activar }
+                      </button>
+
+                      <button
+                        type="button"
+                        (click)="openReset(u)"
+                        class="h-11 rounded-xl bg-[#4B3621] px-4 text-xs font-extrabold text-[#F5F5DC] hover:opacity-95 active:scale-[0.99]"
+                      >
+                        Reset pass
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+
+        <div class="mt-5 flex items-center justify-between">
+          <button
+            type="button"
+            (click)="prevPage()"
+            [disabled]="page <= 1"
+            class="h-11 rounded-xl border border-[#4B3621]/25 bg-white px-4 text-sm font-bold text-[#4B3621] hover:bg-[#F5F5DC] disabled:opacity-60"
+          >
+            ← Anterior
+          </button>
+
+          <button
+            type="button"
+            (click)="nextPage()"
+            [disabled]="page >= totalPages"
+            class="h-11 rounded-xl border border-[#4B3621]/25 bg-white px-4 text-sm font-bold text-[#4B3621] hover:bg-[#F5F5DC] disabled:opacity-60"
+          >
+            Siguiente →
+          </button>
+        </div>
+      }
+    }
+  </div>
+
+  <!-- Reset password -->
+  @if (resetTarget) {
+    <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-4">
+      <div class="w-full max-w-md rounded-3xl border border-[#4B3621]/15 bg-[#F5F5DC] p-5 shadow-lg">
+        <h3 class="text-lg font-black text-[#4B3621]">Reset de contraseña</h3>
+        <p class="mt-1 text-sm text-[#6E5C4B]">
+          Usuario: <span class="font-extrabold text-[#4B3621]">{{ resetTarget.name }}</span>
+        </p>
+
+        <div class="mt-4">
+          <label class="block text-xs font-bold text-[#6E5C4B] mb-1">
+            Nueva contraseña
+          </label>
+          <input
+            type="password"
+            class="h-12 w-full rounded-xl border border-[#8B6F47]/40 bg-white/80 px-4 text-sm text-[#4B3621] outline-none focus:border-[#4B3621]"
+            placeholder="mínimo 6 caracteres"
+            [value]="resetPasswordValue"
+            (input)="resetPasswordValue = $any($event.target).value"
+          />
+        </div>
+
+        <div class="mt-4 flex gap-3">
+          <button
+            type="button"
+            (click)="closeReset()"
+            class="h-12 flex-1 rounded-xl border border-[#4B3621]/25 bg-white px-4 text-sm font-bold text-[#4B3621] hover:bg-white/80"
+          >
+            Cancelar
+          </button>
+
+          <button
+            type="button"
+            (click)="confirmReset()"
+            [disabled]="resettingPassword"
+            class="h-12 flex-1 rounded-xl bg-[#FFBF00] text-[#4B3621] text-sm font-black hover:brightness-95 disabled:opacity-60"
+          >
+            @if (resettingPassword) { Guardando... } @else { Guardar }
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+</section>

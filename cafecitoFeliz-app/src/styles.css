@@ -1,0 +1,34 @@
+@import "tailwindcss";
+
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+}
+
+/* Toasts (Angular Material SnackBar) */
+.toast-success {
+  --mdc-snackbar-container-color: #4dfd58;
+  --mdc-snackbar-supporting-text-color: #fff;
+}
+
+.toast-error {
+  --mdc-snackbar-container-color: #ff4343;
+  --mdc-snackbar-supporting-text-color: #fff;
+}
+
+.toast-info {
+  --mdc-snackbar-container-color: #2e81ff;
+  --mdc-snackbar-supporting-text-color: #fff;
+}
+
+
+/* ============================================================
+  Dashboard - ByTato / Cafecito Feliz
+  Paleta Café Cálido:
+  - Primario: #4B3621
+  - Fondo:    #F5F5DC
+  - Acento:   #FFBF00
+============================================================ */

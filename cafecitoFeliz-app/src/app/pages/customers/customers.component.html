@@ -1,0 +1,351 @@
+<div class="w-full">
+  <!-- Header -->
+  <div
+    class="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-3"
+  >
+    <div>
+      <h1 class="text-xl sm:text-2xl font-black text-[#4B3621]">Clientes</h1>
+      <p class="mt-1 text-sm text-[#6E5C4B]">
+        Administra clientes para descuentos y mejor servicio
+      </p>
+    </div>
+
+    @if (isAdmin) {
+      <div class="flex items-end gap-2">
+        <div>
+          <label class="block text-xs font-bold text-[#6E5C4B] mb-1"
+            >Mostrar</label
+          >
+          <select
+            class="h-12 rounded-xl border border-[#8B6F47]/40 bg-white/80 px-4 text-sm text-[#4B3621] outline-none focus:border-[#4B3621]"
+            [value]="activeFilter"
+            (change)="
+              activeFilter = $any($event.target).value; loadCustomers(true)
+            "
+          >
+            <option value="true">Activos</option>
+            <option value="false">Desactivados</option>
+            <option value="all">Todos</option>
+          </select>
+        </div>
+
+        <button
+          type="button"
+          (click)="clear()"
+          class="h-12 rounded-xl border border-[#4B3621]/25 bg-white px-5 text-sm font-bold text-[#4B3621] hover:bg-[#F5F5DC] active:scale-[0.99]"
+        >
+          Limpiar
+        </button>
+      </div>
+    }
+  </div>
+
+  <div class="mt-6 grid grid-cols-1 xl:grid-cols-12 gap-6">
+    <!-- Buscar -->
+    <section class="xl:col-span-7 space-y-6">
+      <!-- Buscar -->
+      <div class="rounded-2xl border border-[#4B3621]/15 bg-white/70 p-5">
+        <div class="flex items-center justify-between gap-3">
+          <h2 class="text-base sm:text-lg font-extrabold text-[#4B3621]">
+            Buscar
+          </h2>
+          <button
+            type="button"
+            (click)="loadCustomers(true)"
+            class="h-12 rounded-xl bg-[#FFBF00] px-5 text-sm font-extrabold text-[#4B3621] hover:brightness-95 active:scale-[0.99]"
+          >
+            Refrescar
+          </button>
+        </div>
+
+        <div class="mt-4 flex flex-col sm:flex-row gap-3 items-end">
+          <div class="flex-1">
+            <label class="block text-xs font-bold text-[#6E5C4B] mb-1">
+              Nombre / Email / Teléfono
+            </label>
+            <input
+              class="h-12 w-full rounded-xl border border-[#8B6F47]/40 bg-white/80 px-4 text-sm sm:text-base text-[#4B3621] outline-none focus:border-[#4B3621]"
+              placeholder="Ej. Juan Pérez, correo@demo.com, 4491234567"
+              [value]="query"
+              (input)="query = $any($event.target).value"
+              (keyup.enter)="search()"
+            />
+          </div>
+
+          <button
+            type="button"
+            (click)="search()"
+            [disabled]="loading"
+            class="h-12 rounded-xl bg-[#4B3621] px-6 text-sm sm:text-base font-extrabold text-[#F5F5DC] hover:opacity-95 active:scale-[0.99] disabled:opacity-60"
+          >
+            @if (loading) {
+              Buscando...
+            } @else {
+              Buscar
+            }
+          </button>
+        </div>
+
+        @if (msg) {
+          <p
+            class="mt-4 text-sm text-[#6E5C4B] rounded-xl border border-[#4B3621]/10 bg-[#F5F5DC]/70 p-3"
+          >
+            {{ msg }}
+          </p>
+        }
+      </div>
+
+      <!-- Resultados -->
+      <div class="rounded-2xl border border-[#4B3621]/15 bg-white/70 p-5">
+        <div class="flex items-center justify-between gap-3">
+          <h2 class="text-base sm:text-lg font-extrabold text-[#4B3621]">
+            Resultados
+          </h2>
+          <p class="text-xs sm:text-sm text-[#6E5C4B]">
+            {{ total }} total · Página {{ page }} / {{ totalPages }}
+          </p>
+        </div>
+
+        @if (customers.length === 0) {
+          <div
+            class="mt-4 rounded-2xl border border-[#4B3621]/10 bg-white/60 p-4"
+          >
+            <p class="text-sm text-[#6E5C4B]">No hay clientes para mostrar</p>
+          </div>
+        } @else {
+          <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
+            @for (c of customers; track c.id) {
+              <div
+                class="rounded-2xl border border-[#4B3621]/10 bg-white/80 p-4"
+              >
+                <div class="flex items-start justify-between gap-3">
+                  <div class="min-w-0">
+                    @if (editingId === c.id) {
+                      <label class="block text-xs font-bold text-[#6E5C4B] mb-1"
+                        >Nombre</label
+                      >
+                      <input
+                        class="h-12 w-full rounded-xl border border-[#8B6F47]/40 bg-white px-4 text-sm text-[#4B3621] outline-none focus:border-[#4B3621]"
+                        [value]="editName"
+                        (input)="editName = $any($event.target).value"
+                      />
+                    } @else {
+                      <p
+                        class="text-sm sm:text-base font-extrabold text-[#4B3621] truncate"
+                      >
+                        {{ c.name }}
+                      </p>
+                      <p
+                        class="mt-1 text-xs sm:text-sm text-[#6E5C4B] truncate"
+                      >
+                        {{ c.phoneOrEmail }}
+                      </p>
+                    }
+                  </div>
+
+                  <span
+                    class="shrink-0 inline-flex items-center rounded-full px-3 py-1 text-xs font-extrabold"
+                    [ngClass]="
+                      c.active
+                        ? 'bg-[#FFBF00]/30 text-[#4B3621]'
+                        : 'bg-gray-200 text-gray-700'
+                    "
+                  >
+                    @if (c.active) {
+                      Activo
+                    } @else {
+                      Desactivado
+                    }
+                  </span>
+                </div>
+
+                <!-- Edit -->
+                @if (editingId === c.id) {
+                  <div class="mt-3">
+                    <label class="block text-xs font-bold text-[#6E5C4B] mb-1"
+                      >Contacto</label
+                    >
+                    <input
+                      class="h-12 w-full rounded-xl border border-[#8B6F47]/40 bg-white px-4 text-sm text-[#4B3621] outline-none focus:border-[#4B3621]"
+                      [value]="editContact"
+                      (input)="editContact = $any($event.target).value"
+                    />
+                  </div>
+
+                  @if (editMsg) {
+                    <p
+                      class="mt-3 text-sm text-red-700 bg-red-50 border border-red-500/20 rounded-xl p-3"
+                    >
+                      {{ editMsg }}
+                    </p>
+                  }
+                }
+
+                <!-- Footer -->
+                <div class="mt-4 flex items-center justify-between gap-3">
+                  <span
+                    class="inline-flex items-center rounded-full bg-[#F5F5DC] px-3 py-1 text-xs font-bold text-[#4B3621]"
+                  >
+                    Compras: {{ c.purchasesCount }}
+                  </span>
+
+                  <!-- Acciones admin -->
+                  @if (isAdmin) {
+                    <div class="flex items-center gap-2">
+                      @if (editingId === c.id) {
+                        <button
+                          type="button"
+                          (click)="saveEdit(c.id)"
+                          [disabled]="savingEdit"
+                          class="h-11 rounded-xl bg-[#4B3621] px-4 text-xs sm:text-sm font-extrabold text-[#F5F5DC] hover:opacity-95 active:scale-[0.99] disabled:opacity-60"
+                        >
+                          @if (savingEdit) {
+                            Guardando...
+                          } @else {
+                            Guardar
+                          }
+                        </button>
+
+                        <button
+                          type="button"
+                          (click)="cancelEdit()"
+                          class="h-11 rounded-xl border border-[#4B3621]/25 bg-white px-4 text-xs sm:text-sm font-bold text-[#4B3621] hover:bg-[#F5F5DC] active:scale-[0.99]"
+                        >
+                          Cancelar
+                        </button>
+                      } @else {
+                        <button
+                          type="button"
+                          (click)="startEdit(c)"
+                          class="h-11 rounded-xl border border-[#4B3621]/25 bg-white px-4 text-xs sm:text-sm font-bold text-[#4B3621] hover:bg-[#F5F5DC] active:scale-[0.99]"
+                        >
+                          Editar
+                        </button>
+
+                        <button
+                          type="button"
+                          (click)="toggleActive(c)"
+                          class="h-11 rounded-xl px-4 text-xs sm:text-sm font-extrabold bg-[#FFBF00] text-[#4B3621] hover:brightness-95 active:scale-[0.99]"
+                        >
+                          @if (c.active) {
+                            Desactivar
+                          } @else {
+                            Activar
+                          }
+                        </button>
+                      }
+                    </div>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+
+          <div class="mt-5 flex items-center justify-between gap-3">
+            <button
+              type="button"
+              (click)="prevPage()"
+              [disabled]="page <= 1 || loading"
+              class="h-12 rounded-xl border border-[#4B3621]/25 bg-white px-5 text-sm font-bold text-[#4B3621] hover:bg-[#F5F5DC] active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Anterior
+            </button>
+
+            <p class="text-xs sm:text-sm text-[#6E5C4B]">
+              Página
+              <span class="font-extrabold text-[#4B3621]">{{ page }}</span> de
+              <span class="font-extrabold text-[#4B3621]">{{
+                totalPages
+              }}</span>
+            </p>
+
+            <button
+              type="button"
+              (click)="nextPage()"
+              [disabled]="page >= totalPages || loading"
+              class="h-12 rounded-xl border border-[#4B3621]/25 bg-white px-5 text-sm font-bold text-[#4B3621] hover:bg-[#F5F5DC] active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Siguiente
+            </button>
+          </div>
+        }
+      </div>
+    </section>
+
+    <!-- Crear solo admin -->
+    <section class="xl:col-span-5 space-y-6">
+      <div class="rounded-2xl border border-[#4B3621]/15 bg-white/70 p-5">
+        <h2 class="text-base sm:text-lg font-extrabold text-[#4B3621]">
+          Crear cliente
+        </h2>
+        <p class="mt-1 text-sm text-[#6E5C4B]">
+          Solo administradores pueden crear nuevos clientes
+        </p>
+
+        @if (!isAdmin) {
+          <p
+            class="mt-4 text-sm text-[#6E5C4B] rounded-xl border border-[#4B3621]/10 bg-[#F5F5DC]/70 p-3"
+          >
+            Tu usuario no tiene permisos para crear clientes
+          </p>
+        } @else {
+          <div class="mt-4 space-y-3">
+            <div>
+              <label class="block text-xs font-bold text-[#6E5C4B] mb-1"
+                >Nombre</label
+              >
+              <input
+                class="h-12 w-full rounded-xl border border-[#8B6F47]/40 bg-white/80 px-4 text-sm text-[#4B3621] outline-none focus:border-[#4B3621]"
+                placeholder="Ej. María López"
+                [value]="createName"
+                (input)="createName = $any($event.target).value"
+              />
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-[#6E5C4B] mb-1"
+                >Teléfono o Email</label
+              >
+              <input
+                class="h-12 w-full rounded-xl border border-[#8B6F47]/40 bg-white/80 px-4 text-sm text-[#4B3621] outline-none focus:border-[#4B3621]"
+                placeholder="Ej. 4491234567 o correo@demo.com"
+                [value]="createContact"
+                (input)="createContact = $any($event.target).value"
+              />
+            </div>
+
+            @if (createMsg) {
+              <p
+                class="text-sm rounded-xl p-3 border border-[#4B3621]/10 bg-[#F5F5DC]/70 text-[#6E5C4B]"
+              >
+                {{ createMsg }}
+              </p>
+            }
+
+            <button
+              type="button"
+              (click)="createCustomer()"
+              [disabled]="creating"
+              class="mt-2 h-14 w-full rounded-2xl bg-[#4B3621] text-[#F5F5DC] text-base font-black hover:opacity-95 active:scale-[0.99] disabled:opacity-60"
+            >
+              @if (creating) {
+                Creando...
+              } @else {
+                Crear cliente
+              }
+            </button>
+          </div>
+        }
+      </div>
+
+      <!-- Tip -->
+      <div class="rounded-2xl border border-[#4B3621]/15 bg-white/60 p-5">
+        <p class="text-sm text-[#6E5C4B]">
+          Si el cliente cambió de telefono o correo, usa
+          <span class="font-bold text-[#4B3621]">Editar</span>. Si ya no viene,
+          usa <span class="font-bold text-[#4B3621]">Desactivar</span>
+        </p>
+      </div>
+    </section>
+  </div>
+</div>

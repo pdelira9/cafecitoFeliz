@@ -1,0 +1,59 @@
+<div class="w-full max-w-md">
+  <div class="rounded-3xl border border-[#4B3621]/15 bg-white/70 p-6 shadow-sm">
+    <!-- Logos -->
+    <div class="flex items-center justify-center gap-4">
+      <img src="assets/images/by-tato.png" alt="ByTato" class="h-14 w-auto object-contain" />
+      <img src="assets/images/logo-cafecito-feliz.png" alt="Cafecito Feliz" class="h-14 w-auto object-contain" />
+    </div>
+
+    <h1 class="mt-4 text-center text-xl font-black text-[#4B3621]">
+      Iniciar sesión
+    </h1>
+    <p class="mt-1 text-center text-sm text-[#6E5C4B]">
+      Cafecito Feliz
+    </p>
+
+    <div class="mt-6 space-y-3">
+      <div>
+        <label class="block text-xs font-bold text-[#6E5C4B] mb-1">Correo</label>
+        <input
+          class="h-12 w-full rounded-xl border border-[#8B6F47]/40 bg-white/80 px-4 text-sm text-[#4B3621] outline-none focus:border-[#4B3621]"
+          type="email"
+          placeholder="admin@bytato.com"
+          [value]="email"
+          (input)="email = $any($event.target).value"
+        />
+      </div>
+
+      <div>
+        <label class="block text-xs font-bold text-[#6E5C4B] mb-1">Contraseña</label>
+        <input
+          class="h-12 w-full rounded-xl border border-[#8B6F47]/40 bg-white/80 px-4 text-sm text-[#4B3621] outline-none focus:border-[#4B3621]"
+          type="password"
+          placeholder="••••••••"
+          [value]="password"
+          (input)="password = $any($event.target).value"
+        />
+      </div>
+
+      @if (errorMsg) {
+        <p class="text-sm text-red-700 bg-red-50 border border-red-500/20 rounded-xl p-3">
+          {{ errorMsg }}
+        </p>
+      }
+
+      <button
+        type="button"
+        (click)="login()"
+        [disabled]="loading"
+        class="mt-2 h-12 w-full rounded-2xl bg-[#4B3621] text-[#F5F5DC] text-base font-black hover:opacity-95 active:scale-[0.99] disabled:opacity-60"
+      >
+        @if (loading) { Entrando... } @else { Entrar }
+      </button>
+
+      <p class="text-xs text-center text-[#6E5C4B] mt-3">
+        Si eres cajero, usa tu usuario asignado
+      </p>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,100 @@
+<div class="min-h-screen bg-[#F5F5DC] flex flex-col">
+  <!-- HEADER-->
+  <header
+    class="sticky top-0 z-40 border-b border-[#4B3621]/15 bg-[#F5F5DC]/90 backdrop-blur"
+  >
+    <div
+      class="w-full px-4 sm:px-6 lg:px-10 h-24 flex items-center justify-between gap-4"
+    >
+      <div class="flex items-center gap-3 h-full">
+        <img
+          src="assets/images/by-tato.png"
+          alt="ByTato"
+          class="h-full w-auto object-contain py-1"
+        />
+        <img
+          src="assets/images/logo-cafecito-feliz.png"
+          alt="Cafecito Feliz"
+          class="h-full w-auto object-contain py-1"
+        />
+      </div>
+
+      <button
+        type="button"
+        (click)="logout()"
+        class="h-10 rounded-xl bg-white/70 border border-[#4B3621]/20 px-4 text-sm font-extrabold text-[#4B3621] hover:bg-[#F5F5DC]"
+      >
+        Salir
+      </button>
+      <p class="text-xs text-[#6E5C4B]">{{ user?.name }} · {{ user?.role }}</p>
+
+      <div class="text-right">
+        <p
+          class="text-sm sm:text-base font-extrabold text-[#4B3621] leading-tight"
+        >
+          Cafecito Feliz
+        </p>
+        <p class="text-xs text-[#6E5C4B]">Sistema ByTato</p>
+
+        <nav class="mt-1 flex justify-end gap-2 text-xs sm:text-sm">
+          <a routerLink="/ventas" class="text-[#4B3621] hover:underline">
+            Ventas
+          </a>
+
+          <span class="text-[#4B3621]/30">•</span>
+
+          @if (user?.role === "admin") {
+            <a routerLink="/productos" class="text-[#4B3621] hover:underline">
+              Productos
+            </a>
+            <span class="text-[#4B3621]/30">•</span>
+          }
+
+          <a routerLink="/clientes" class="text-[#4B3621] hover:underline">
+            Clientes
+          </a>
+
+          <span class="text-[#4B3621]/30">•</span>
+
+          @if (user?.role === "admin") {
+          <a routerLink="/usuarios" class="text-[#4B3621] hover:underline"
+            >Usuarios</a
+          >
+          <span class="text-[#4B3621]/30">•</span>
+          }
+
+          <a routerLink="/historial" class="text-[#4B3621] hover:underline">
+            Historial
+          </a>
+          <span class="text-[#4B3621]/30">•</span>
+
+          @if (user?.role === "admin") {
+          <a routerLink="/dashboard" class="text-[#4B3621] hover:underline"
+            >Dashboard</a
+          >
+          <span class="text-[#4B3621]/30">•</span>
+          }
+          
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-1 w-full px-4 sm:px-6 lg:px-10 py-6">
+    <router-outlet />
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="border-t border-[#4B3621]/15 bg-white/50">
+    <div
+      class="w-full px-4 sm:px-6 lg:px-10 py-4 flex flex-col sm:flex-row items-center justify-between gap-2"
+    >
+      <p class="text-xs sm:text-sm text-[#6E5C4B]">
+        © {{ currentYear }} Cafecito Feliz
+      </p>
+      <p class="text-xs sm:text-sm text-[#6E5C4B]">
+        Sistema de punto de venta
+      </p>
+    </div>
+  </footer>
+</div>

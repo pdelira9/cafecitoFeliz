@@ -1,0 +1,138 @@
+
+
+<div class="w-full space-y-6">
+
+  <!-- Header -->
+  <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
+    <div>
+      <h1 class="text-xl sm:text-2xl font-black text-[#4B3621]">Dashboard</h1>
+      <p class="text-sm text-[#6E5C4B]">Resumen de ventas</p>
+    </div>
+
+    <!-- Filtro  -->
+    <div class="flex flex-col sm:flex-row gap-3 sm:items-end">
+      <div>
+        <label class="block text-xs font-bold text-[#6E5C4B] mb-1">Desde</label>
+        <input
+          type="date"
+          class="h-12 w-44 rounded-xl border border-[#8B6F47]/40 bg-white/80 px-3 text-sm text-[#4B3621] outline-none focus:border-[#4B3621]"
+          [value]="from"
+          (input)="from = $any($event.target).value"
+        />
+      </div>
+
+      <div>
+        <label class="block text-xs font-bold text-[#6E5C4B] mb-1">Hasta</label>
+        <input
+          type="date"
+          class="h-12 w-44 rounded-xl border border-[#8B6F47]/40 bg-white/80 px-3 text-sm text-[#4B3621] outline-none focus:border-[#4B3621]"
+          [value]="to"
+          (input)="to = $any($event.target).value"
+        />
+      </div>
+
+      <button
+        type="button"
+        (click)="load()"
+        class="h-12 rounded-xl bg-[#4B3621] px-6 text-sm sm:text-base font-extrabold text-[#F5F5DC] hover:opacity-95 active:scale-[0.99]"
+      >
+        Actualizar
+      </button>
+    </div>
+  </div>
+
+  <!-- Estados -->
+  @if (loading) {
+    <div class="rounded-2xl border border-[#4B3621]/15 bg-white/70 p-6">
+      <p class="text-sm text-[#6E5C4B]">Cargando dashboard...</p>
+    </div>
+  } @else if (errorMsg) {
+    <div class="rounded-2xl border border-red-500/20 bg-red-50 p-6">
+      <p class="text-sm text-red-700">{{ errorMsg }}</p>
+    </div>
+  } @else {
+    <!-- Tarjetas -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+      <!-- Total vendido -->
+      <div class="rounded-2xl border border-[#4B3621]/15 bg-white/70 p-5">
+        <p class="text-xs font-bold text-[#6E5C4B]">Total vendido</p>
+        <p class="mt-2 text-2xl font-black text-[#4B3621]">
+          ${{ data?.revenue }}
+        </p>
+        <p class="mt-1 text-xs text-[#6E5C4B]">
+          Solo ventas completadas
+        </p>
+      </div>
+
+      <!-- Ventas completadas -->
+      <div class="rounded-2xl border border-[#4B3621]/15 bg-white/70 p-5">
+        <p class="text-xs font-bold text-[#6E5C4B]">Ventas completadas</p>
+        <p class="mt-2 text-2xl font-black text-[#4B3621]">
+          {{ data?.sales?.completed }}
+        </p>
+        <p class="mt-1 text-xs text-[#6E5C4B]">
+          En el rango seleccionado
+        </p>
+      </div>
+
+      <!-- Ventas canceladas -->
+      <div class="rounded-2xl border border-[#4B3621]/15 bg-white/70 p-5">
+        <p class="text-xs font-bold text-[#6E5C4B]">Ventas canceladas</p>
+        <p class="mt-2 text-2xl font-black text-[#4B3621]">
+          {{ data?.sales?.canceled }}
+        </p>
+        <p class="mt-1 text-xs text-[#6E5C4B]">
+          Para auditoria
+        </p>
+      </div>
+
+      <!-- Ticket promedio -->
+      <div class="rounded-2xl border border-[#4B3621]/15 bg-white/70 p-5">
+        <p class="text-xs font-bold text-[#6E5C4B]">Ticket promedio</p>
+        <p class="mt-2 text-2xl font-black text-[#4B3621]">
+          ${{ data?.avgTicket }}
+        </p>
+        <p class="mt-1 text-xs text-[#6E5C4B]">
+          Promedio de completed
+        </p>
+      </div>
+    </div>
+
+    <!-- Top productos vendidos -->
+    <div class="rounded-2xl border border-[#4B3621]/15 bg-white/70 p-5">
+      <div class="flex items-center justify-between gap-3">
+        <h2 class="text-base sm:text-lg font-extrabold text-[#4B3621]">
+          Top productos (cantidad)
+        </h2>
+        <span class="inline-flex items-center rounded-full bg-[#FFBF00]/30 px-4 py-1.5 text-sm font-extrabold text-[#4B3621]">
+          Dashboard
+        </span>
+      </div>
+
+      @if (!data || data.topProducts.length === 0) {
+        <p class="mt-4 text-sm text-[#6E5C4B]">No hay ventas completadas en este rango</p>
+      } @else {
+        <div class="mt-4 overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="text-left text-[#6E5C4B]">
+                <th class="py-2">Producto</th>
+                <th class="py-2">Cantidad</th>
+                <th class="py-2">Importe</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (p of data.topProducts; track p.name) {
+                <tr class="border-t border-[#4B3621]/10">
+                  <td class="py-3 font-extrabold text-[#4B3621]">{{ p.name }}</td>
+                  <td class="py-3 text-[#4B3621]">{{ p.qty }}</td>
+                  <td class="py-3 text-[#4B3621]">${{ p.amount }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </div>
+  }
+</div>
