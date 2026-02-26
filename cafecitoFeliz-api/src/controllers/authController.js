@@ -3,7 +3,6 @@ const User = require('../models/User');
 const { signToken } = require('../utils/jwt');
 
 // POST /api/auth/register
-
 async function register(req, res) {
   try {
     const { name, email, password, role = 'cashier' } = req.body ?? {};
@@ -25,18 +24,44 @@ async function register(req, res) {
       return res.status(422).json({ error: 'Validation failed', details });
     }
 
-    const existing = await User.findOne({ email: email.toLowerCase().trim() });
+    const normalizedEmail = email.toLowerCase().trim();
+
+    const existing = await User.findOne({ email: normalizedEmail });
     if (existing) {
       return res.status(409).json({ error: 'User already exists' });
+    }
+
+    //   si YA existe un admin -> forzar a cashier
+    //   si NO existe admin -> exige BOOTSTRAP_ADMIN_KEY
+    let finalRole = role;
+
+    if (role === 'admin') {
+      const adminExists = await User.exists({ role: 'admin' });
+
+      if (adminExists) {
+        finalRole = 'cashier';
+      } else {
+        const bootstrapKey = req.headers['x-bootstrap-key'];
+        const expectedKey = process.env.BOOTSTRAP_ADMIN_KEY;
+
+        if (!expectedKey || bootstrapKey !== expectedKey) {
+          return res.status(403).json({
+            error: 'Bootstrap key required to create first admin',
+            details: [{ field: 'x-bootstrap-key', message: 'missing or invalid bootstrap key' }],
+          });
+        }
+
+        finalRole = 'admin';
+      }
     }
 
     const passwordHash = await bcrypt.hash(password, 10);
 
     const created = await User.create({
       name: name.trim(),
-      email: email.toLowerCase().trim(),
+      email: normalizedEmail,
       passwordHash,
-      role,
+      role: finalRole,
     });
 
     return res.status(201).json(created);
@@ -47,7 +72,6 @@ async function register(req, res) {
 }
 
 // POST /api/auth/login
-
 async function login(req, res) {
   try {
     const { email, password } = req.body ?? {};
