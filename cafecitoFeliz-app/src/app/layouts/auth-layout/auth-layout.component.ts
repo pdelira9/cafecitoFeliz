@@ -7,9 +7,9 @@ import { RouterOutlet } from '@angular/router';
   standalone: true,
   imports: [RouterOutlet],
   template: `
-    <div class="min-h-screen bg-[#F5F5DC] flex items-center justify-center px-4">
-      <router-outlet />
-    </div>
-  `,
+  <div class="h-dvh bg-[#F5F5DC] grid place-items-center p-4 overflow-hidden">
+    <router-outlet />
+  </div>
+`,
 })
 export class AuthLayoutComponent {}

@@ -10,18 +10,18 @@ body {
 
 /* Toasts (Angular Material SnackBar) */
 .toast-success {
-  --mdc-snackbar-container-color: #4dfd58;
-  --mdc-snackbar-supporting-text-color: #fff;
+  --mdc-snackbar-container-color: #0adf19;
+  --mdc-snackbar-supporting-text-color: #000000;
 }
 
 .toast-error {
   --mdc-snackbar-container-color: #ff4343;
-  --mdc-snackbar-supporting-text-color: #fff;
+  --mdc-snackbar-supporting-text-color: #000000;
 }
 
 .toast-info {
   --mdc-snackbar-container-color: #2e81ff;
-  --mdc-snackbar-supporting-text-color: #fff;
+  --mdc-snackbar-supporting-text-color: #000000;
 }
 
 

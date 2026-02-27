@@ -1,4 +1,4 @@
-<main class="flex-1 w-full px-4 sm:px-6 lg:px-10 py-6">
+<div class="h-full w-full min-h-0">
   @if (loading) {
     <div class="rounded-2xl border border-[#4B3621]/15 bg-white/70 p-6">
       <p class="text-sm text-[#6E5C4B]">Cargando productos...</p>
@@ -8,11 +8,17 @@
       <p class="text-sm text-red-700">{{ errorMsg }}</p>
     </div>
   } @else {
-    <div class="grid grid-cols-1 xl:grid-cols-12 gap-6">
+    <div
+      class="h-full min-h-0 grid grid-cols-1 xl:grid-cols-12 gap-6 overflow-hidden"
+    >
       <!-- Columna izquierda, clientes y productos -->
-      <section class="xl:col-span-7 space-y-6">
+      <section
+        class="xl:col-span-7 min-h-0 overflow-hidden grid grid-rows-[auto,1fr] gap-6"
+      >
         <!-- Card Cliente -->
-        <div class="rounded-2xl border border-[#4B3621]/15 bg-white/70 p-5">
+        <div
+          class="rounded-2xl border border-[#4B3621]/15 bg-white/70 p-5 shrink-0"
+        >
           <div class="flex items-center justify-between gap-3">
             <h3 class="text-base sm:text-lg font-extrabold text-[#4B3621]">
               Cliente
@@ -186,7 +192,9 @@
         </div>
 
         <!-- CARD Productos-->
-        <div class="rounded-2xl border border-[#4B3621]/15 bg-white/70 p-5">
+        <div
+          class="rounded-2xl border border-[#4B3621]/15 bg-white/70 p-5 min-h-0 overflow-hidden flex flex-col"
+        >
           <div class="flex items-center justify-between gap-3">
             <h3 class="text-base sm:text-lg font-extrabold text-[#4B3621]">
               Productos
@@ -201,46 +209,50 @@
               No hay productos disponibles.
             </p>
           } @else {
-            <div
-              class="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"
-            >
-              @for (p of products; track p.id) {
-                <div
-                  class="rounded-2xl border border-[#4B3621]/10 bg-white/70 p-4 flex items-start justify-between gap-3"
-                >
-                  <div class="min-w-0">
-                    <p
-                      class="text-sm sm:text-base font-extrabold text-[#4B3621] truncate"
-                    >
-                      {{ p.name }}
-                    </p>
-                    <p class="text-xs sm:text-sm text-[#6E5C4B]">
-                      ${{ p.price }} · Stock: {{ p.stock }}
-                    </p>
-                  </div>
-
-                  <!-- Botón Agregar -->
-                  <button
-                    data-testid="product-add-btn"
-                    type="button"
-                    (click)="addToCart(p)"
-                    [disabled]="p.stock <= 0"
-                    class="shrink-0 h-12 rounded-xl px-5 text-sm font-extrabold transition-transform duration-150 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50 disabled:bg-gray-300 disabled:text-gray-600 bg-[#FFBF00] text-[#4B3621] hover:brightness-95 hover:shadow-md"
+            <div class="mt-4 flex-1 min-h-0 overflow-auto">
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                @for (p of products; track p.id) {
+                  <div
+                    class="rounded-2xl border border-[#4B3621]/10 bg-white/70 p-4 flex items-start justify-between gap-3"
                   >
-                    Agregar
-                  </button>
-                </div>
-              }
+                    <div class="min-w-0">
+                      <p
+                        class="text-sm sm:text-base font-extrabold text-[#4B3621] truncate"
+                      >
+                        {{ p.name }}
+                      </p>
+                      <p class="text-xs sm:text-sm text-[#6E5C4B]">
+                        ${{ p.price }} · Stock: {{ p.stock }}
+                      </p>
+                    </div>
+
+                    <!-- Botón Agregar -->
+                    <button
+                      data-testid="product-add-btn"
+                      type="button"
+                      (click)="addToCart(p)"
+                      [disabled]="p.stock <= 0"
+                      class="shrink-0 h-12 rounded-xl px-5 text-sm font-extrabold transition-transform duration-150 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50 disabled:bg-gray-300 disabled:text-gray-600 bg-[#FFBF00] text-[#4B3621] hover:brightness-95 hover:shadow-md"
+                    >
+                      Agregar
+                    </button>
+                  </div>
+                }
+              </div>
             </div>
           }
         </div>
       </section>
 
-      <!-- Columna derecha Carrito, Totales y Ticket -->
-      <section class="xl:col-span-5 space-y-6">
-        <!-- Card Carrito y Totales -->
-        <div class="rounded-2xl border border-[#4B3621]/15 bg-white/70 p-5">
-          <div class="flex items-center justify-between gap-3">
+      <!-- Columna derecha Carrito, Total y Ticket -->
+      <section
+        class="xl:col-span-5 min-h-0 overflow-hidden grid grid-rows-[1fr,auto] gap-6"
+      >
+        <!-- Card Carrito -->
+        <div
+          class="rounded-2xl border border-[#4B3621]/15 bg-white/70 p-5 flex flex-col min-h-0 overflow-hidden"
+        >
+          <div class="flex items-center justify-between gap-3 shrink-0">
             <h3 class="text-base sm:text-lg font-extrabold text-[#4B3621]">
               Carrito
             </h3>
@@ -253,9 +265,31 @@
           </div>
 
           @if (cart.length === 0) {
-            <p class="mt-4 text-sm text-[#6E5C4B]">Aún no agregas productos.</p>
+            <div class="flex-1 min-h-0 grid place-items-center">
+              <div class="text-center max-w-sm">
+                <p class="text-sm font-extrabold text-[#4B3621]">
+                  Carrito vacío
+                </p>
+                <p class="mt-1 text-xs sm:text-sm text-[#6E5C4B]">
+                  Agrega productos desde la lista para continuar.
+                </p>
+
+                <div
+                  class="mt-4 inline-flex items-center gap-2 rounded-2xl border border-[#4B3621]/10 bg-white/70 px-4 py-2"
+                >
+                  <span class="text-xs sm:text-sm text-[#6E5C4B]">
+                    Usa “Agregar”
+                  </span>
+                  <span
+                    class="text-xs sm:text-sm font-extrabold text-[#4B3621]"
+                  >
+                    ⇩ Productos
+                  </span>
+                </div>
+              </div>
+            </div>
           } @else {
-            <div class="mt-4 space-y-3">
+            <div class="mt-4 flex-1 min-h-0 overflow-auto space-y-3 pr-1">
               @for (item of cart; track item.product.id) {
                 <div
                   class="rounded-2xl border border-[#4B3621]/10 bg-white/80 p-4"
@@ -284,9 +318,9 @@
 
                   <div class="mt-3 flex items-center justify-between gap-3">
                     <div class="flex items-center gap-2">
-                      <label class="text-xs font-bold text-[#6E5C4B]">
-                        Cantidad
-                      </label>
+                      <label class="text-xs font-bold text-[#6E5C4B]"
+                        >Cantidad</label
+                      >
 
                       <input
                         type="number"
@@ -313,127 +347,125 @@
               }
             </div>
 
-            <!-- Totales -->
-            <div
-              class="mt-5 rounded-2xl border border-[#4B3621]/10 bg-[#F5F5DC]/80 p-4"
-            >
+            <div class="mt-4 shrink-0 border-t border-[#4B3621]/10 pt-4">
+              <!-- Totales -->
               <div
-                class="flex items-center justify-between text-sm sm:text-base"
+                class="rounded-2xl border border-[#4B3621]/10 bg-[#F5F5DC]/80 p-4"
               >
-                <span class="text-[#6E5C4B]">Subtotal</span>
-                <span class="font-extrabold text-[#4B3621]"
-                  >${{ subtotal }}</span
-                >
-              </div>
-
-              @if (discountPercent > 0) {
                 <div
-                  class="mt-2 flex items-center justify-between text-sm sm:text-base"
+                  class="flex items-center justify-between text-sm sm:text-base"
                 >
-                  <span class="text-[#6E5C4B]"
-                    >Descuento ({{ discountPercent }}%)</span
-                  >
+                  <span class="text-[#6E5C4B]">Subtotal</span>
                   <span class="font-extrabold text-[#4B3621]"
-                    >-${{ discountAmount }}</span
+                    >${{ subtotal }}</span
                   >
                 </div>
-              }
 
+                @if (discountPercent > 0) {
+                  <div
+                    class="mt-2 flex items-center justify-between text-sm sm:text-base"
+                  >
+                    <span class="text-[#6E5C4B]"
+                      >Descuento ({{ discountPercent }}%)</span
+                    >
+                    <span class="font-extrabold text-[#4B3621]"
+                      >-${{ discountAmount }}</span
+                    >
+                  </div>
+                }
+
+                <div
+                  class="mt-3 flex items-center justify-between text-base sm:text-lg"
+                >
+                  <span class="font-extrabold text-[#4B3621]">Total</span>
+                  <span class="text-xl font-black text-[#4B3621]"
+                    >${{ total }}</span
+                  >
+                </div>
+              </div>
+
+              <!-- Metodo de pago -->
               <div
-                class="mt-3 flex items-center justify-between text-base sm:text-lg"
+                class="mt-4 rounded-2xl border border-[#4B3621]/10 bg-white/70 p-4"
               >
-                <span class="font-extrabold text-[#4B3621]">Total</span>
-                <span class="text-xl font-black text-[#4B3621]"
-                  >${{ total }}</span
-                >
-              </div>
-            </div>
+                <p class="text-sm sm:text-base font-extrabold text-[#4B3621]">
+                  Método de pago
+                </p>
+                <p class="text-xs sm:text-sm text-[#6E5C4B] mt-1">
+                  Selecciona como pagará el cliente
+                </p>
 
-            <!-- Metodo de pago -->
-            <div
-              class="mt-4 rounded-2xl border border-[#4B3621]/10 bg-white/70 p-4"
-            >
-              <p class="text-sm sm:text-base font-extrabold text-[#4B3621]">
-                Método de pago
-              </p>
-              <p class="text-xs sm:text-sm text-[#6E5C4B] mt-1">
-                Selecciona como pagará el cliente
-              </p>
+                <div class="mt-3 grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <button
+                    type="button"
+                    (click)="paymentMethod = 'cash'"
+                    [disabled]="paying"
+                    class="h-14 rounded-2xl px-4 text-sm sm:text-base font-extrabold transition-all active:scale-[0.99] disabled:opacity-60 disabled:cursor-not-allowed border"
+                    [class]="
+                      paymentMethod === 'cash'
+                        ? 'bg-[#FFBF00] text-[#4B3621] border-[#4B3621]/20 shadow-sm'
+                        : 'bg-white/80 text-[#4B3621] border-[#4B3621]/15 hover:bg-[#F5F5DC]'
+                    "
+                  >
+                    Efectivo
+                  </button>
 
-              <div class="mt-3 grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <!-- Efectivo -->
-                <button
-                  type="button"
-                  (click)="paymentMethod = 'cash'"
-                  [disabled]="paying"
-                  class="h-14 rounded-2xl px-4 text-sm sm:text-base font-extrabold transition-all active:scale-[0.99] disabled:opacity-60 disabled:cursor-not-allowed border"
-                  [class]="
-                    paymentMethod === 'cash'
-                      ? 'bg-[#FFBF00] text-[#4B3621] border-[#4B3621]/20 shadow-sm'
-                      : 'bg-white/80 text-[#4B3621] border-[#4B3621]/15 hover:bg-[#F5F5DC]'
-                  "
-                >
-                  Efectivo
-                </button>
+                  <button
+                    type="button"
+                    (click)="paymentMethod = 'card'"
+                    [disabled]="paying"
+                    class="h-14 rounded-2xl px-4 text-sm sm:text-base font-extrabold transition-all active:scale-[0.99] disabled:opacity-60 disabled:cursor-not-allowed border"
+                    [class]="
+                      paymentMethod === 'card'
+                        ? 'bg-[#FFBF00] text-[#4B3621] border-[#4B3621]/20 shadow-sm'
+                        : 'bg-white/80 text-[#4B3621] border-[#4B3621]/15 hover:bg-[#F5F5DC]'
+                    "
+                  >
+                    Tarjeta
+                  </button>
 
-                <!-- Tarjeta -->
-                <button
-                  type="button"
-                  (click)="paymentMethod = 'card'"
-                  [disabled]="paying"
-                  class="h-14 rounded-2xl px-4 text-sm sm:text-base font-extrabold transition-all active:scale-[0.99] disabled:opacity-60 disabled:cursor-not-allowed border"
-                  [class]="
-                    paymentMethod === 'card'
-                      ? 'bg-[#FFBF00] text-[#4B3621] border-[#4B3621]/20 shadow-sm'
-                      : 'bg-white/80 text-[#4B3621] border-[#4B3621]/15 hover:bg-[#F5F5DC]'
-                  "
-                >
-                  Tarjeta
-                </button>
+                  <button
+                    type="button"
+                    (click)="paymentMethod = 'transfer'"
+                    [disabled]="paying"
+                    class="h-14 rounded-2xl px-4 text-sm sm:text-base font-extrabold transition-all active:scale-[0.99] disabled:opacity-60 disabled:cursor-not-allowed border"
+                    [class]="
+                      paymentMethod === 'transfer'
+                        ? 'bg-[#FFBF00] text-[#4B3621] border-[#4B3621]/20 shadow-sm'
+                        : 'bg-white/80 text-[#4B3621] border-[#4B3621]/15 hover:bg-[#F5F5DC]'
+                    "
+                  >
+                    Transferencia
+                  </button>
+                </div>
 
-                <!-- Transferencia -->
-                <button
-                  type="button"
-                  (click)="paymentMethod = 'transfer'"
-                  [disabled]="paying"
-                  class="h-14 rounded-2xl px-4 text-sm sm:text-base font-extrabold transition-all active:scale-[0.99] disabled:opacity-60 disabled:cursor-not-allowed border"
-                  [class]="
-                    paymentMethod === 'transfer'
-                      ? 'bg-[#FFBF00] text-[#4B3621] border-[#4B3621]/20 shadow-sm'
-                      : 'bg-white/80 text-[#4B3621] border-[#4B3621]/15 hover:bg-[#F5F5DC]'
-                  "
-                >
-                  Transferencia
-                </button>
+                <p class="mt-3 text-xs sm:text-sm text-[#6E5C4B]">
+                  Seleccionado:
+                  <span class="font-extrabold text-[#4B3621]">
+                    {{ paymentLabels[paymentMethod] }}
+                  </span>
+                </p>
               </div>
 
-              <!-- Confirmar antes -->
-              <p class="mt-3 text-xs sm:text-sm text-[#6E5C4B]">
-                Seleccionado:
-                <span class="font-extrabold text-[#4B3621]">
-                  {{ paymentLabels[paymentMethod] }}
-                </span>
-              </p>
+              <!-- Cobrar -->
+              <button
+                data-testid="pay-btn"
+                type="button"
+                (click)="pay()"
+                [disabled]="paying || cart.length === 0"
+                class="mt-4 h-14 w-full rounded-2xl bg-[#4B3621] text-[#F5F5DC] text-base font-black hover:opacity-95 active:scale-[0.99] disabled:opacity-60"
+              >
+                @if (paying) {
+                  Procesando...
+                } @else {
+                  Cobrar
+                }
+              </button>
             </div>
-
-            <!-- Cobrar -->
-            <button
-              data-testid="pay-btn"
-              type="button"
-              (click)="pay()"
-              [disabled]="paying || cart.length === 0"
-              class="mt-4 h-14 w-full rounded-2xl bg-[#4B3621] text-[#F5F5DC] text-base font-black hover:opacity-95 active:scale-[0.99] disabled:opacity-60"
-            >
-              @if (paying) {
-                Procesando...
-              } @else {
-                Cobrar
-              }
-            </button>
           }
         </div>
 
-        <!-- Card Ticket -->
+        <!-- Card Ticket (auto, abajo) -->
         @if (lastTicket) {
           <div
             data-testid="ticket-card"
@@ -450,16 +482,14 @@
                 <p class="text-base font-black text-[#4B3621]">
                   {{ lastTicket.storeName }}
                 </p>
-                <p class="text-xs text-[#6E5C4B]">
-                  {{ lastTicket.timestamp }}
-                </p>
+                <p class="text-xs text-[#6E5C4B]">{{ lastTicket.timestamp }}</p>
               </div>
 
               <p class="mt-2 text-sm text-[#6E5C4B]">
                 Folio:
-                <span class="font-extrabold text-[#4B3621]">
-                  {{ lastTicket.saleId }}
-                </span>
+                <span class="font-extrabold text-[#4B3621]">{{
+                  lastTicket.saleId
+                }}</span>
               </p>
 
               <div class="mt-3 space-y-1">
@@ -480,30 +510,27 @@
               >
                 <div class="flex items-center justify-between">
                   <span class="text-[#6E5C4B]">Subtotal</span>
-                  <span class="font-extrabold text-[#4B3621]">
-                    ${{ lastTicket.subtotal }}
-                  </span>
+                  <span class="font-extrabold text-[#4B3621]"
+                    >${{ lastTicket.subtotal }}</span
+                  >
                 </div>
                 <div class="flex items-center justify-between">
                   <span class="text-[#6E5C4B]">Descuento</span>
-                  <span class="font-extrabold text-[#4B3621]">
-                    {{ lastTicket.discount }}
-                  </span>
+                  <span class="font-extrabold text-[#4B3621]">{{
+                    lastTicket.discount
+                  }}</span>
                 </div>
                 <div class="flex items-center justify-between text-base">
                   <span class="font-extrabold text-[#4B3621]">Total</span>
-                  <span class="text-lg font-black text-[#4B3621]">
-                    ${{ lastTicket.total }}
-                  </span>
+                  <span class="text-lg font-black text-[#4B3621]"
+                    >${{ lastTicket.total }}</span
+                  >
                 </div>
               </div>
             </div>
           </div>
-        }
-        @if (lastTicket) {
-          <div
-            class="mt-6 rounded-2xl border border-[#4B3621]/15 bg-white/70 p-5"
-          >
+
+          <div class="rounded-2xl border border-[#4B3621]/15 bg-white/70 p-5">
             <div class="flex items-center justify-between gap-3">
               <h3 class="text-base sm:text-lg font-extrabold text-[#4B3621]">
                 Ticket generado
@@ -534,4 +561,4 @@
       </section>
     </div>
   }
-</main>
+</div>
